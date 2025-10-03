@@ -5,7 +5,7 @@ Created on Tue Jul 26 13:54:49 2022
 @author: Original template by Rolf van Lieshout
 """
 from Route import Route
-
+from Problem import Location
 class Solution:
     """
     Method that represents a solution tot the PDPTW
@@ -72,6 +72,45 @@ class Solution:
             req = random.choice(self.served) 
             self.removeRequest(req)
     
+
+    def executeShawRemoval(self, nRemove, random):
+        """
+        Method that executes Shaw Removal Heuristic: it removes requests that are somewhat similar.
+
+        It's destroy method number 3 in the ALNS
+
+        Parameters
+        ----------
+        nRemove : int
+            number of requests that are removed.
+        randomGen : random
+            Used to generate random numbers
+
+        """
+
+        if len(self.served) == 0:
+            return
+        # Pick a random request (then find similar ones)
+        self.evaluateRelatedness(random)
+
+        return
+
+    def evaluateRelatedness(self, random):
+        # Pick a random request (then find similar ones)
+        req = random.choice(self.served)
+        reqDist = Location.getDistance(req.pickUpLoc, req.deliveryLoc)
+        self.removeRequest(req)
+        
+        relatedness = {}
+        
+        for request in self.served:
+
+            requestDist = Location.getDistance(request.pickUpLoc, request.deliveryLoc)
+            relatedness[request] = reqDist+requestDist
+            print("Printing relatedness")
+            # Understand hwo to print relatedness
+        return
+
     def removeRequest(self,request):
         """
         Method that removes a request from the solution

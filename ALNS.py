@@ -72,7 +72,8 @@ class ALNS:
             destroyOpNr = self.determineDestroyOpNr()
             repairOpNr = self.determineRepairOpNr()
             #execute the destroy and the repair and evaluate the result
-            self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
+            #self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
+            self.destroyAndRepair(3, repairOpNr, sizeNBH);
             self.tempSolution.computeDistance()
             print("Iteration "+str(i)+": Found solution with distance: "+str(self.tempSolution.distance))
             #self.tempSolution.print()
@@ -142,7 +143,7 @@ class ALNS:
         elif destroyHeuristicNr == 2:
             self.tempSolution.executeDestroyMethod2(sizeNBH)
         else:
-            self.tempSolution.executeDestroyMethod3(sizeNBH)
+            self.tempSolution.executeShawRemoval(sizeNBH, self.randomGen)
         
         #perform the repair
         if repairHeuristicNr == 1:
