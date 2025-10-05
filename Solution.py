@@ -76,7 +76,8 @@ class Solution:
 
     def executeShawRemoval(self, nRemove, random):
         """
-        Method that executes Shaw Removal Heuristic: it removes requests that are somewhat similar.
+        Method that executes Shaw Removal Heuristic: it removes requests that are somewhat similar. This is a variation of the method proposed by Ropke et al. (2006).
+        It only considers distance and demand as parameters to evaluate relatedness.
 
         It's destroy method number 3 in the ALNS
 
@@ -103,7 +104,9 @@ class Solution:
 
     def evaluateRelatedness(self, req):
         """
-        Method taht calculates a relatedness parameter between a reference request (req) and all other requests in the problem, returning a list of requests ordered from greatest to lowest relatedness
+        Method taht calculates a relatedness parameter between a reference request (req) and all other requests in the problem, returning a list of requests ordered from greatest to lowest relatedness.
+
+        It uses only 2 parameters: distance and demand
         """
 
         # Pick a random request (then find similar ones)
