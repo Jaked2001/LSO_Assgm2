@@ -4,8 +4,9 @@ Created on Tue Jul 26 13:54:49 2022
 
 @author: Original template by Rolf van Lieshout
 """
+import numpy as np
 from Route import Route
-from Problem import Location
+from Problem import Location, PDPTW
 class Solution:
     """
     Method that represents a solution tot the PDPTW
@@ -115,14 +116,17 @@ class Solution:
             # Distance component
             pickUpDist = Location.getDistance(req.pickUpLoc, request.pickUpLoc)
             requestDist = Location.getDistance(req.deliveryLoc, request.deliveryLoc)
+            R_dist = (pickUpDist+requestDist)  / self.problem.distMatrix_Max
             
-            # Time component
+            # Demand component (normalized)
+            req_demand = req.pickUpLoc.demand
+            request_demand = req.pickUpLoc.demand
             
-
+            R_demand = abs(req_demand - request_demand) / self.problem.capacity # Assumes no loc has demand greater than vehicle capacity. Should not matter, since we are using difference between demands anyway, so this should alsways be between 0 and 1.
 
 
             # Calculate R (relatedness)
-            R = pickUpDist+requestDist # relatedness parameter
+            R =  R_dist + R_demand # relatedness parameter
             
             relatedness.append((req, request, R))
             # print("Printing relatedness")

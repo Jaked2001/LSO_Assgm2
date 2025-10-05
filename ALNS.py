@@ -94,7 +94,7 @@ class ALNS:
             self.bestDistance = self.tempSolution.distance
             self.bestSolution = self.tempSolution.copy()
             self.currentSolution = self.tempSolution.copy()
-            print("Found new global best solution.")
+            print("Found new global best solution.\n")
         
         #currently, we only accept better solutions, no simulated annealing
         if self.tempSolution.distance<self.currentSolution.distance:
@@ -140,14 +140,11 @@ class ALNS:
         #perform the destroy 
         if destroyHeuristicNr == 1:
             self.tempSolution.executeRandomRemoval(sizeNBH,self.randomGen)
-            print("Using random removal")
         elif destroyHeuristicNr == 2:
-            #self.tempSolution.executeDestroyMethod2(sizeNBH)
             self.tempSolution.executeShawRemoval(sizeNBH, self.randomGen)
-            print("Using Shaw removal")
         else:
             self.tempSolution.executeDestroyMethod3(sizeNBH, self.randomGen)
-        
+
         #perform the repair
         if repairHeuristicNr == 1:
             self.tempSolution.executeRandomInsertion(self.randomGen)

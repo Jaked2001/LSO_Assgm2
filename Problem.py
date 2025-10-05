@@ -117,7 +117,9 @@ class PDPTW:
             for j in self.locations:
                 distItoJ = Location.getDistance(i,j)
                 self.distMatrix[i.nodeID,j.nodeID] = distItoJ
-    
+        self.distMatrix_Max = np.max(self.distMatrix)
+        self.distMatrix_Min = np.min(self.distMatrix)
+
     def __str__(self):
         return f" PDPTW problem {self.name} with {len(self.requests)} requests and a vehicle capacity of {self.capacity}"
 
