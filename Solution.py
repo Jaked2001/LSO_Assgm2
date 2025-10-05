@@ -91,25 +91,44 @@ class Solution:
         if len(self.served) == 0:
             return
         # Pick a random request (then find similar ones)
-        self.evaluateRelatedness(random)
-
-        return
-
-    def evaluateRelatedness(self, random):
-        # Pick a random request (then find similar ones)
         req = random.choice(self.served)
-        reqDist = Location.getDistance(req.pickUpLoc, req.deliveryLoc)
+        candidates = self.evaluateRelatedness(req)
+        # print(candidates[0][1])
+        # print(candidates[1][1])
+        for i in range(nRemove):
+            if len(self.served) == 0:
+                break
+            self.removeRequest(candidates[i][1])
+
+    def evaluateRelatedness(self, req):
+        """
+        Method taht calculates a relatedness parameter between a reference request (req) and all other requests in the problem, returning a list of requests ordered from greatest to lowest relatedness
+        """
+
+        # Pick a random request (then find similar ones)
+        
         self.removeRequest(req)
         
-        relatedness = {}
+        relatedness = []
         
         for request in self.served:
+            # Distance component
+            pickUpDist = Location.getDistance(req.pickUpLoc, request.pickUpLoc)
+            requestDist = Location.getDistance(req.deliveryLoc, request.deliveryLoc)
+            
+            # Time component
+            
 
-            requestDist = Location.getDistance(request.pickUpLoc, request.deliveryLoc)
-            relatedness[request] = reqDist+requestDist
-            print("Printing relatedness")
-            # Understand hwo to print relatedness
-        return
+
+
+            # Calculate R (relatedness)
+            R = pickUpDist+requestDist # relatedness parameter
+            
+            relatedness.append((req, request, R))
+            # print("Printing relatedness")
+            # print(relatedness[request])
+        relatedness.sort(key=lambda x: x[2], reverse = True) # Sort all requests based on relatedness
+        return relatedness
 
     def removeRequest(self,request):
         """
