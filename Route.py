@@ -153,4 +153,4 @@ class Route:
                         bestInsert = afterInsertion
                         minDist = afterInsertion.distance
         
-        return bestInsert
+        return bestInsert, minDist

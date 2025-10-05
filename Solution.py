@@ -5,8 +5,10 @@ Created on Tue Jul 26 13:54:49 2022
 @author: Original template by Rolf van Lieshout
 """
 import numpy as np
+import sys
 from Route import Route
 from Problem import Location, PDPTW
+
 class Solution:
     """
     Method that represents a solution tot the PDPTW
@@ -186,9 +188,10 @@ class Solution:
             inserted = False
             while len(potentialRoutes)>0:
                 #pick a random route
+                
                 randomRoute = randomGen.choice(potentialRoutes)
                 
-                afterInsertion = randomRoute.greedyInsert(req)
+                afterInsertion, _ = randomRoute.greedyInsert(req)
                 if afterInsertion==None:
                     #insertion not feasible, remove route from potential routes
                     potentialRoutes.remove(randomRoute)
@@ -209,6 +212,54 @@ class Solution:
             #update the lists with served and notServed requests
             self.served.append(req)
             self.notServed.remove(req)
-        
+         
+    def executeGreedyInsertion(self, randomGen):
+        """
+        Method that inserts unserved requests in the solution using a basic greedy heuristic.
+        It looks for the best overall position to insert each requests.
 
-        
+        This is repair method number 2 in the ANLS.
+
+        Parameters
+        ----------
+        randomGen : Random
+            Used to generate random numbers
+        """
+        while len(self.notServed) > 0:
+            bestRequest = None
+            bestRoute = None
+            bestDist = sys.maxsize
+            inserted = False
+            for route in self.routes:
+                candidateRequest = None
+                candidateRoute = None
+                candidateDist = sys.maxsize
+                for req in self.notServed:
+                    newRoute, dist = route.greedyInsert(req)
+                    if newRoute == None:
+                        continue
+                    elif dist<candidateDist:
+                        candidateRequest = req
+                        candidateRoute = newRoute
+                        candidateDist = dist
+                if candidateRoute==None:
+                    continue
+                if candidateDist < bestDist:
+                    inserted = True
+                    routeToRemove = route
+                    bestRequest = candidateRequest
+                    bestRoute = candidateRoute
+                    bestDist = candidateDist
+            if inserted==True:
+                self.routes.remove(routeToRemove)
+                self.routes.append(bestRoute)
+                self.served.append(bestRequest)
+                self.notServed.remove(bestRequest)
+
+            elif not inserted:
+                #Impossible to insert in existing routes, create new route:
+                locList = [self.problem.depot,req.pickUpLoc,req.deliveryLoc,self.problem.depot]
+                newRoute = Route(locList,[req],self.problem)
+                self.routes.append(newRoute)
+            #update the lists with served and notServed requests
+
