@@ -11,7 +11,7 @@ class Parameters:
     """
     Class that holds all the parameters for ALNS
     """
-    nIterations = 50  #number of iterations of the ALNS
+    nIterations = 10  #number of iterations of the ALNS
     minSizeNBH = 1      #minimum neighborhood size
     maxSizeNBH = 45     #maximum neighborhood size
     randomSeed = 1      #value of the random seed
@@ -51,7 +51,7 @@ class ALNS:
         self.problem = problem
         self.nDestroyOps = nDestroyOps
         self.nRepairOps = nRepairOps
-        self.destrouyOpsWeigths = [(i, 5) for i in range(1, self.nDestroyOps + 1)]
+        self.destroyOpsWeigths = [(i, 5) for i in range(1, self.nDestroyOps + 1)]
         self.repairOpsWeigths = [(i, 5) for i in range(1, self.nRepairOps + 1)]
         self.randomGen = random.Random(Parameters.randomSeed) #used for reproducibility
         
@@ -99,9 +99,9 @@ class ALNS:
     def iterationPrint(self, iterationNr, destroyOpNr, repairOpNr, sizeNBH):
         i = str(iterationNr)
         destroyOp = str(destroyOpNr)
-        destroyW = str(round(self.destrouyOpsweigths[destroyOpNr-1][1], 2))
+        destroyW = str(round(self.destroyOpsWeigths[destroyOpNr-1][1], 2))
         repariOp = str(repairOpNr)
-        repairW = str(round(self.repairOpsweigths[repairOpNr-1][1], 2))
+        repairW = str(round(self.repairOpsWeigths[repairOpNr-1][1], 2))
         sizeNBH = str(sizeNBH)
         distance = str(self.tempSolution.distance)
         
@@ -138,10 +138,10 @@ class ALNS:
         updateSpeed = Parameters.updateSpeed
 
         # Update destroy weights
-        oldWeight_d = self.destrouyOpsWeigths[chosenDestroyOp-1][1]
+        oldWeight_d = self.destroyOpsWeigths[chosenDestroyOp-1][1]
         newWeight_d = updateSpeed*oldWeight_d + (1-updateSpeed)*reward
         
-        self.destrouyOpsWeigths[chosenDestroyOp-1] = (self.destrouyOpsWeigths[chosenDestroyOp-1][0], newWeight_d)
+        self.destroyOpsWeigths[chosenDestroyOp-1] = (self.destroyOpsWeigths[chosenDestroyOp-1][0], newWeight_d)
 
         # Update repair weights
         oldWeight_r = self.repairOpsWeigths[chosenRepOp-1][1]
@@ -157,7 +157,7 @@ class ALNS:
         Currently we just pick a random one with equal probabilities. 
         Could be extended with weights
         """
-        selectedOpNr = self.randomGen.choices([t[0] for t in self.destrouyOpsweigths], weights=[t[1] for t in self.destrouyOpsweigths], k = 1 )[0]
+        selectedOpNr = self.randomGen.choices([t[0] for t in self.destroyOpsWeigths], weights=[t[1] for t in self.destroyOpsWeigths], k = 1 )[0]
         return selectedOpNr #self.randomGen.randint(1, self.nDestroyOps)
     
     def determineRepairOpNr(self):
@@ -166,7 +166,7 @@ class ALNS:
         Currently we just pick a random one with equal probabilities. 
         Could be extended with weights
         """
-        selectedOpNr = self.randomGen.choices([t[0] for t in self.repairOpsweigths], weights=[t[1] for t in self.repairOpsweigths], k = 1 )[0]
+        selectedOpNr = self.randomGen.choices([t[0] for t in self.repairOpsWeigths], weights=[t[1] for t in self.repairOpsWeigths], k = 1 )[0]
         return selectedOpNr
     
     def destroyAndRepair(self,destroyHeuristicNr,repairHeuristicNr,sizeNBH):
