@@ -51,8 +51,8 @@ class ALNS:
         self.problem = problem
         self.nDestroyOps = nDestroyOps
         self.nRepairOps = nRepairOps
-        self.destrouyOpsweigths = [(i, 5) for i in range(1, self.nDestroyOps + 1)]
-        self.repairOpsweigths = [(i, 5) for i in range(1, self.nRepairOps + 1)]
+        self.destrouyOpsWeigths = [(i, 5) for i in range(1, self.nDestroyOps + 1)]
+        self.repairOpsWeigths = [(i, 5) for i in range(1, self.nRepairOps + 1)]
         self.randomGen = random.Random(Parameters.randomSeed) #used for reproducibility
         
     
@@ -138,16 +138,16 @@ class ALNS:
         updateSpeed = Parameters.updateSpeed
 
         # Update destroy weights
-        oldWeight_d = self.destrouyOpsweigths[chosenDestroyOp-1][1]
+        oldWeight_d = self.destrouyOpsWeigths[chosenDestroyOp-1][1]
         newWeight_d = updateSpeed*oldWeight_d + (1-updateSpeed)*reward
         
-        self.destrouyOpsweigths[chosenDestroyOp-1] = (self.destrouyOpsweigths[chosenDestroyOp-1][0], newWeight_d)
+        self.destrouyOpsWeigths[chosenDestroyOp-1] = (self.destrouyOpsWeigths[chosenDestroyOp-1][0], newWeight_d)
 
         # Update repair weights
-        oldWeight_r = self.repairOpsweigths[chosenRepOp-1][1]
+        oldWeight_r = self.repairOpsWeigths[chosenRepOp-1][1]
         newWeight_r = updateSpeed*oldWeight_r + (1-updateSpeed)*reward
         
-        self.repairOpsweigths[chosenRepOp-1] = (self.repairOpsweigths[chosenRepOp-1][0], newWeight_r)
+        self.repairOpsWeigths[chosenRepOp-1] = (self.repairOpsWeigths[chosenRepOp-1][0], newWeight_r)
 
 
     
