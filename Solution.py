@@ -342,7 +342,7 @@ class Solution:
             Used to generate random numbers
             
         """
-      
+        k = 2 # we can change this, 
         while len(self.notServed) > 0:
             bestRequest = None
             bestRoute = None
@@ -367,7 +367,7 @@ class Solution:
               
                 regretCost = 0
              
-                k = 2 # we can change this
+                 
                 for j in range(1,min(k,len(costs))):
                     regretCost = regretCost + costs[j][0] - costs[0][0] # regret cost between best and second option
                 if regretCost > bestRegret or (regretCost == bestRegret and costs[0][0] < bestCost): # Ties are broken by selecting the request with best insertion cost
@@ -375,6 +375,7 @@ class Solution:
                         bestRequest = req
                         bestRoute = costs[0][1]  # best route to insert
                         routeToRemove = costs[0][2]
+                        #print(cost[0])
                         bestCost = costs[0][0] # we need this for tie breaks
                 
                        
