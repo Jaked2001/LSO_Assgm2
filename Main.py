@@ -11,8 +11,7 @@ from ALNS import ALNS
 testI = "instances/lr112.txt"
 problem = Problem.PDPTW.readInstance(testI)
 print(problem)
-
-nDestroyOps = 2
+nDestroyOps = 3
 nRepairOps = 2
 alns = ALNS(problem,nDestroyOps,nRepairOps)
 alns.execute()

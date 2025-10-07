@@ -67,6 +67,8 @@ class Solution:
             Used to generate random numbers
 
         """
+        
+
         for i in range(nRemove):
             #terminate if no more requests are served
             if len(self.served)==0: 
@@ -74,14 +76,15 @@ class Solution:
             #pick a random request and remove it from the solutoin
             req = random.choice(self.served) 
             self.removeRequest(req)
-    
+            
+
 
     def executeShawRemoval(self, nRemove, random):
         """
         Method that executes Shaw Removal Heuristic: it removes requests that are somewhat similar. This is a variation of the method proposed by Ropke et al. (2006).
         It only considers distance and demand as parameters to evaluate relatedness.
 
-        It's destroy method number 3 in the ALNS
+        It's destroy method number 2 in the ALNS 
 
         Parameters
         ----------
@@ -138,7 +141,63 @@ class Solution:
             # print(relatedness[request])
         relatedness.sort(key=lambda x: x[2], reverse = True) # Sort all requests based on relatedness
         return relatedness
+    
+    
+    def executeWorstReomval(self,nReomve, random):
+        """
+        Method that executes Worst Removal Heuristic: it removes the requests that appear to be placed in the wrong position in the solution. This is a variation of the method proposed by Ropke et al. (2006).
+        
 
+        It's destroy method number 3 in the ALNS 
+
+        Parameters
+        ----------
+        nRemove : int
+            number of requests that are removed.
+        randomGen : random
+            Used to generate random numbers
+
+        """
+        
+        if len(self.served) == 0:
+            return
+        
+        
+        while nReomve > 0:
+            cost = []
+            for req in self.served: # to find which route is now serving this requset
+                routefound = None
+                for route in self.routes:
+                    if req in route.requests:
+                        routefound = route
+                        break
+                if routefound is None: # Code should not reach here
+                    continue
+                # This can be impoved for efficency 
+                # insted of calcualting the whole tour, it is possible to calculate the two new line and minus it from the orginal
+                
+                orginalCost = routefound.distance
+                temp = routefound.copy()
+                temp.removeRequest(req)
+                newCost =temp.distance
+                deltaCost = orginalCost - newCost 
+                cost.append((req,deltaCost))
+                
+                
+            # randomization controlled by the parameter p
+            p = 1 
+            
+            cost.sort(key=lambda x: x[1] , reverse=True)   # sort by form worst based on the delta cost
+            # The random removal
+            randomN = random.random()
+            reqNumber = int(len(cost) * (randomN ** p))
+            
+            self.removeRequest(cost[reqNumber][0])
+            nReomve -= 1
+                        
+        
+    
+    
     def removeRequest(self,request):
         """
         Method that removes a request from the solution

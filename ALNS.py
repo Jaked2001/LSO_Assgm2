@@ -142,8 +142,8 @@ class ALNS:
             self.tempSolution.executeRandomRemoval(sizeNBH,self.randomGen)
         elif destroyHeuristicNr == 2:
             self.tempSolution.executeShawRemoval(sizeNBH, self.randomGen)
-        else:
-            self.tempSolution.executeDestroyMethod3(sizeNBH, self.randomGen)
+        elif destroyHeuristicNr == 3:
+            self.tempSolution.executeWorstReomval(sizeNBH, self.randomGen)
 
         #perform the repair
         if repairHeuristicNr == 1:
