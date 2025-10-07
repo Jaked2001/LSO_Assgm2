@@ -15,6 +15,14 @@ class Parameters:
     minSizeNBH = 1      #minimum neighborhood size
     maxSizeNBH = 45     #maximum neighborhood size
     randomSeed = 1      #value of the random seed
+    reward = {
+        "Global Best": 10,
+        "Better Sol": 8,
+        "Accepted": 5,
+        "Rejected": 1
+    }
+    updateSpeed = 0.9
+    
     #can add parameters such as cooling rate etc.
     
 class ALNS:
@@ -43,6 +51,8 @@ class ALNS:
         self.problem = problem
         self.nDestroyOps = nDestroyOps
         self.nRepairOps = nRepairOps
+        self.destroyOpsWeigths = [(i, 5) for i in range(1, self.nDestroyOps + 1)]
+        self.repairOpsWeigths = [(i, 5) for i in range(1, self.nRepairOps + 1)]
         self.randomGen = random.Random(Parameters.randomSeed) #used for reproducibility
         
     
@@ -75,36 +85,71 @@ class ALNS:
             #self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.tempSolution.computeDistance()
-            print("Iteration "+str(i)+": (destroy: " + str(destroyOpNr) + ", repair: " + str(repairOpNr) + ", NHB size: " + str(sizeNBH) + ") Found solution with distance: "+str(self.tempSolution.distance))
+            self.iterationPrint(i, destroyOpNr, repairOpNr, sizeNBH)
+            #print("Iteration "+str(i)+": (destroy: " + str(destroyOpNr) + ", repair: " + str(repairOpNr) + ", NHB size: " + str(sizeNBH) + ") Found solution with distance: "+str(self.tempSolution.distance))
             #self.tempSolution.print()
             #determine if the new solution is accepted
-            self.checkIfAcceptNewSol()
+            state = self.checkIfAcceptNewSol()
             #update the ALNS weights
-            self.updateWeights()
+            self.updateWeights(state, destroyOpNr, repairOpNr)
         endtime = time.time() # get the end time
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
     
+    def iterationPrint(self, iterationNr, destroyOpNr, repairOpNr, sizeNBH):
+        i = str(iterationNr)
+        destroyOp = str(destroyOpNr)
+        destroyW = str(round(self.destroyOpsWeigths[destroyOpNr-1][1], 2))
+        repariOp = str(repairOpNr)
+        repairW = str(round(self.repairOpsWeigths[repairOpNr-1][1], 2))
+        sizeNBH = str(sizeNBH)
+        distance = str(self.tempSolution.distance)
+        
+
+        message = "Iteration " + i + ": (destroy: " + destroyOp + " (" + destroyW + "), repair: " + repariOp + " (" + repairW + "), NBH size: " + sizeNBH + "). Found solution with distance: " + distance
+        print(message)
+        
+
     def checkIfAcceptNewSol(self):
         """
         Method that checks if we accept the newly found solution
         """
+        state = "Rejected"
         #if we found a global best solution, we always accept
         if self.tempSolution.distance<self.bestDistance:
             self.bestDistance = self.tempSolution.distance
             self.bestSolution = self.tempSolution.copy()
             self.currentSolution = self.tempSolution.copy()
+            state = "Global Best"
             print("Found new global best solution.\n")
         
         #currently, we only accept better solutions, no simulated annealing
         if self.tempSolution.distance<self.currentSolution.distance:
             self.currentSolution = self.tempSolution.copy()
+            state = "Accepted"
+
+        return state
     
-    def updateWeights(self):
+    def updateWeights(self, state, chosenDestroyOp, chosenRepOp):
         """
         Method that updates the weights of the destroy and repair operators
         """
-        pass
+        reward = Parameters.reward[state]
+        updateSpeed = Parameters.updateSpeed
+
+        # Update destroy weights
+        oldWeight_d = self.destroyOpsWeigths[chosenDestroyOp-1][1]
+        newWeight_d = updateSpeed*oldWeight_d + (1-updateSpeed)*reward
+        
+        self.destroyOpsWeigths[chosenDestroyOp-1] = (self.destroyOpsWeigths[chosenDestroyOp-1][0], newWeight_d)
+
+        # Update repair weights
+        oldWeight_r = self.repairOpsWeigths[chosenRepOp-1][1]
+        newWeight_r = updateSpeed*oldWeight_r + (1-updateSpeed)*reward
+        
+        self.repairOpsWeigths[chosenRepOp-1] = (self.repairOpsWeigths[chosenRepOp-1][0], newWeight_r)
+
+
     
     def determineDestroyOpNr(self):
         """
@@ -112,7 +157,8 @@ class ALNS:
         Currently we just pick a random one with equal probabilities. 
         Could be extended with weights
         """
-        return self.randomGen.randint(1, self.nDestroyOps)
+        selectedOpNr = self.randomGen.choices([t[0] for t in self.destroyOpsWeigths], weights=[t[1] for t in self.destroyOpsWeigths], k = 1 )[0]
+        return selectedOpNr #self.randomGen.randint(1, self.nDestroyOps)
     
     def determineRepairOpNr(self):
         """
@@ -120,7 +166,8 @@ class ALNS:
         Currently we just pick a random one with equal probabilities. 
         Could be extended with weights
         """
-        return self.randomGen.randint(1, self.nRepairOps)
+        selectedOpNr = self.randomGen.choices([t[0] for t in self.repairOpsWeigths], weights=[t[1] for t in self.repairOpsWeigths], k = 1 )[0]
+        return selectedOpNr
     
     def destroyAndRepair(self,destroyHeuristicNr,repairHeuristicNr,sizeNBH):
         """
