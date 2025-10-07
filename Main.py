@@ -12,8 +12,7 @@ testI = "instances/lr112.txt"
 problem = Problem.PDPTW.readInstance(testI)
 print(problem)
 nDestroyOps = 3
-nRepairOps = 2
+nRepairOps = 3
 alns = ALNS(problem,nDestroyOps,nRepairOps)
 alns.execute()
 
-# Try to commit

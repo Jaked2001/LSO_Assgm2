@@ -197,7 +197,7 @@ class ALNS:
             self.tempSolution.executeRandomInsertion(self.randomGen)
         elif repairHeuristicNr == 2:
             self.tempSolution.executeGreedyInsertion(self.randomGen)
-        else:
-            self.tempSolution.executeRepairMethod3()
+        elif repairHeuristicNr == 3:
+            self.tempSolution.executeRegretInsertion(self.randomGen)
 
 

@@ -284,6 +284,7 @@ class Solution:
         randomGen : Random
             Used to generate random numbers
         """
+        
         while len(self.notServed) > 0:
             bestRequest = None
             bestRoute = None
@@ -321,4 +322,79 @@ class Solution:
                 newRoute = Route(locList,[req],self.problem)
                 self.routes.append(newRoute)
             #update the lists with served and notServed requests
-
+            # I think we should also apend to served and remove from not serves here, but probably  will not reach here anyway.
+            
+            
+    def executeRegretInsertion(self, randomG):
+        """
+        Method that inserts unserved requests in the solution using the Regret-k heuristic.
+        The regret heuristic tries to improve upon the basic greedy heuristic by incorporating a kind of look ahead
+        information when selecting the request to insert.
+        k is set to 2 right now.
+        
+        This is repair method number 3 in the ANLS.
+        
+        
+        
+        Parameters
+        ----------
+        randomGen : Random
+            Used to generate random numbers
+            
+        """
+      
+        while len(self.notServed) > 0:
+            bestRequest = None
+            bestRoute = None
+            bestRegret = -sys.maxsize # to keep track of the largest Regret
+            bestCost = sys.maxsize
+            routeToRemove = None
+            
+            for req in self.notServed:
+                costs = []
+                
+                for route in self.routes:
+                    newRoute, dist = route.greedyInsert(req)
+                    if newRoute is not None:
+                        costs.append((dist,newRoute,route))
+                        # newRoute is after insertion
+                        # roure is before 
+                
+                if len(costs) == 0:
+                    continue
+                
+                costs.sort(key=lambda x:x[0]) # sort based on dist
+              
+                regretCost = 0
+             
+                k = 2 # we can change this
+                for j in range(1,min(k,len(costs))):
+                    regretCost = regretCost + costs[j][0] - costs[0][0] # regret cost between best and second option
+                if regretCost > bestRegret or (regretCost == bestRegret and costs[0][0] < bestCost): # Ties are broken by selecting the request with best insertion cost
+                        bestRegret = regretCost
+                        bestRequest = req
+                        bestRoute = costs[0][1]  # best route to insert
+                        routeToRemove = costs[0][2]
+                        bestCost = costs[0][0] # we need this for tie breaks
+                
+                       
+                        
+            if bestRequest is None:
+                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                req = randomG.choice(self.notServed)
+                locList = [self.problem.depot, req.pickUpLoc, req.deliveryLoc, self.problem.depot]
+                newRoute = Route(locList, [req], self.problem)
+                self.routes.append(newRoute)
+                self.served.append(req)
+                self.notServed.remove(req)
+            else:                  
+                self.routes.remove(routeToRemove)
+                self.routes.append(bestRoute)
+                self.served.append(bestRequest)
+                self.notServed.remove(bestRequest)
+            #break
+        #print(cost)
+        #print(costs[0])
+   
+   
+            
