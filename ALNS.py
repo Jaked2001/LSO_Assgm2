@@ -6,7 +6,7 @@ Created on Tue Jul 26 16:28:19 2022
 """
 from Solution import Solution
 import random, time
-
+import math
 class Parameters: 
     """
     Class that holds all the parameters for ALNS
@@ -24,7 +24,8 @@ class Parameters:
     updateSpeed = 0.9
     
     #can add parameters such as cooling rate etc.
-    
+    startTempControl = 0.1 # this means if will accept the solotions with 10% highes cost with 50% Prob
+    coolingRate = 0.1 
 class ALNS:
     """
     Class that models the ALNS algorithm. 
@@ -65,6 +66,14 @@ class ALNS:
         self.currentSolution.computeDistance()
         self.bestSolution = self.currentSolution.copy()
         self.bestDistance = self.currentSolution.distance
+        ###
+        w = Parameters.startTempControl
+        z = self.bestDistance
+        self.temperature = - (w * z) / math.log(0.5) # P = e ** (-w.z)/tstart  so tstart = -(w *z) / ln(0.5)
+        
+        print(self.temperature)
+        
+        ###
         print("Created initial solution with distance: "+str(self.bestDistance))
         
     def execute(self):
@@ -114,6 +123,7 @@ class ALNS:
         """
         Method that checks if we accept the newly found solution
         """
+        c = Parameters.coolingRate
         state = "Rejected"
         #if we found a global best solution, we always accept
         if self.tempSolution.distance<self.bestDistance:
@@ -127,6 +137,13 @@ class ALNS:
         if self.tempSolution.distance<self.currentSolution.distance:
             self.currentSolution = self.tempSolution.copy()
             state = "Accepted"
+        elif random.random() > math.e ** -((self.tempSolution.distance - self.currentSolution.distance)/ self.temperature):
+            self.currentSolution = self.tempSolution.copy()
+            state = "Accepted"
+            print("Accepeted the worse soulution")
+            #print(self.temperature)
+            
+        self.temperature = self.temperature * Parameters.coolingRate    
 
         return state
     
