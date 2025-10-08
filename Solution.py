@@ -165,6 +165,8 @@ class Solution:
         
         while nReomve > 0:
             cost = []
+            if len(self.served) == 0:
+                break
             for req in self.served: # to find which route is now serving this requset
                 routefound = None
                 for route in self.routes:
@@ -398,4 +400,5 @@ class Solution:
         #print(costs[0])
    
    
+
             
