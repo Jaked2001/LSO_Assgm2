@@ -8,6 +8,9 @@ from Solution import Solution
 import random, time
 import math
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
+from pathlib import Path 
 
 class Parameters: 
     """
@@ -26,7 +29,7 @@ class Parameters:
     updateSpeed = 0.9
     
     #can add parameters such as cooling rate etc.
-    startTempControl = 0.3 # this means if will accept the solotions with 10% highes cost with 50% Prob
+    startTempControl = 0.1 # this means if will accept the solotions with 10% highes cost with 50% Prob
     coolingRate = 0.2
 class ALNS:
     """
@@ -86,7 +89,9 @@ class ALNS:
         costcu = []
         starttime = time.time() # get the start time
         self.constructInitialSolution()
+        
         for i in range(Parameters.nIterations):
+            
             #copy the current solution
             self.tempSolution = self.currentSolution.copy()
             #decide on the size of the neighbourhood
@@ -104,22 +109,40 @@ class ALNS:
             #determine if the new solution is accepted
             state = self.checkIfAcceptNewSol()
             #update the ALNS weights
+            
+            self.updateWeights(state, destroyOpNr, repairOpNr)
+            
+            
             cost.append((i,self.tempSolution.distance))
             costcu.append((i,self.bestSolution.distance))
-            self.updateWeights(state, destroyOpNr, repairOpNr)
         endtime = time.time() # get the end time
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
         
-        self.drawGraph(cost)
-        self.drawGraph(costcu)
+
+        self.SaveCSVGraph(cost,os.path.basename(self.problem.name) + " tempSolution")
+        self.SaveCSVGraph(costcu, os.path.basename(self.problem.name) + " bestcost")
         
-    def drawGraph(self,data):
+    def SaveCSVGraph(self,data,name):
+        
+        output_dir = Path("Itteration resualts") 
+        output_dir.mkdir(exist_ok=True)
+        #print(name)
+        
         x = [item[0] for item in data]
         y = [item[1] for item in data]
-        
+    
+        df = pd.DataFrame(data)
+        df.columns = ['Itterations', 'Cost']
+        df = df.set_index('Itterations')
+        df.to_csv(output_dir / f"{name}.csv")
         plt.plot(x,y,marker='o')
-        plt.show()
+        plt.savefig(output_dir / f"{name}.png")
+       
+
+        plt.close()
+        
+        
         
         
         

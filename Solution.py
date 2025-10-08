@@ -165,6 +165,8 @@ class Solution:
         
         while nReomve > 0:
             cost = []
+            if len(self.served) == 0: # this was werid
+                break
             for req in self.served: # to find which route is now serving this requset
                 routefound = None
                 for route in self.routes:
@@ -321,8 +323,12 @@ class Solution:
                 locList = [self.problem.depot,req.pickUpLoc,req.deliveryLoc,self.problem.depot]
                 newRoute = Route(locList,[req],self.problem)
                 self.routes.append(newRoute)
+                self.served.append(req)
+                self.notServed.remove(req)
+                
             #update the lists with served and notServed requests
-            # I think we should also apend to served and remove from not serves here, but probably  will not reach here anyway.
+            # I think we should also apend to served and remove from not serves here
+            # it reaches, 
             
             
     def executeRegretInsertion(self, randomG):
@@ -381,7 +387,7 @@ class Solution:
                        
                         
             if bestRequest is None:
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+       
                 req = randomG.choice(self.notServed)
                 locList = [self.problem.depot, req.pickUpLoc, req.deliveryLoc, self.problem.depot]
                 newRoute = Route(locList, [req], self.problem)
