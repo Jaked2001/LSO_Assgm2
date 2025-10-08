@@ -132,9 +132,9 @@ class Solution:
             
             R_demand = abs(req_demand - request_demand) / self.problem.capacity # Assumes no loc has demand greater than vehicle capacity. Should not matter, since we are using difference between demands anyway, so this should alsways be between 0 and 1.
 
-
+            alpha, beta = 1,1
             # Calculate R (relatedness)
-            R =  R_dist + R_demand # relatedness parameter
+            R =  alpha*R_dist + beta*R_demand # relatedness parameter
             
             relatedness.append((req, request, R))
             # print("Printing relatedness")

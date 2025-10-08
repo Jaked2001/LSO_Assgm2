@@ -8,12 +8,14 @@ from Solution import Solution
 import random, time
 import math
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
 
 class Parameters: 
     """
     Class that holds all the parameters for ALNS
     """
-    nIterations = 100  #number of iterations of the ALNS
+    nIterations = 10  #number of iterations of the ALNS
     minSizeNBH = 1      #minimum neighborhood size
     maxSizeNBH = 45     #maximum neighborhood size
     randomSeed = 1      #value of the random seed
@@ -118,8 +120,18 @@ class ALNS:
         x = [item[0] for item in data]
         y = [item[1] for item in data]
         
+
+        results = pd.DataFrame({
+            'Iter': x,
+            'Cost': y
+            })
+        fileName = "log/" +  str(self.problem.name)
+        print(fileName)
+        results.to_csv(fileName, index = False)
+        figureName = fileName + ".png"
         plt.plot(x,y,marker='o')
         plt.show()
+        plt.savefig(fileName)
         
         
         
@@ -237,4 +249,5 @@ class ALNS:
         elif repairHeuristicNr == 3:
             self.tempSolution.executeRegretInsertion(self.randomGen)
 
-
+  
+        
