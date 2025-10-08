@@ -323,8 +323,10 @@ class Solution:
                 locList = [self.problem.depot,req.pickUpLoc,req.deliveryLoc,self.problem.depot]
                 newRoute = Route(locList,[req],self.problem)
                 self.routes.append(newRoute)
+                self.served.append(req) #
+                self.notServed.remove(req)
             #update the lists with served and notServed requests
-            # I think we should also apend to served and remove from not serves here, but probably  will not reach here anyway.
+            # I think we should also apend to served and remove from not serves here
             
             
     def executeRegretInsertion(self, randomG):
@@ -402,3 +404,4 @@ class Solution:
    
 
             
+
