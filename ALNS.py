@@ -7,11 +7,13 @@ Created on Tue Jul 26 16:28:19 2022
 from Solution import Solution
 import random, time
 import math
+import matplotlib.pyplot as plt
+
 class Parameters: 
     """
     Class that holds all the parameters for ALNS
     """
-    nIterations = 10  #number of iterations of the ALNS
+    nIterations = 100  #number of iterations of the ALNS
     minSizeNBH = 1      #minimum neighborhood size
     maxSizeNBH = 45     #maximum neighborhood size
     randomSeed = 1      #value of the random seed
@@ -24,8 +26,8 @@ class Parameters:
     updateSpeed = 0.9
     
     #can add parameters such as cooling rate etc.
-    startTempControl = 0.1 # this means if will accept the solotions with 10% highes cost with 50% Prob
-    coolingRate = 0.1 
+    startTempControl = 0.3 # this means if will accept the solotions with 10% highes cost with 50% Prob
+    coolingRate = 0.2
 class ALNS:
     """
     Class that models the ALNS algorithm. 
@@ -80,6 +82,8 @@ class ALNS:
         """
         Method that executes the ALNS
         """
+        cost = []
+        costcu = []
         starttime = time.time() # get the start time
         self.constructInitialSolution()
         for i in range(Parameters.nIterations):
@@ -100,10 +104,25 @@ class ALNS:
             #determine if the new solution is accepted
             state = self.checkIfAcceptNewSol()
             #update the ALNS weights
+            cost.append((i,self.tempSolution.distance))
+            costcu.append((i,self.bestSolution.distance))
             self.updateWeights(state, destroyOpNr, repairOpNr)
         endtime = time.time() # get the end time
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
+        
+        self.drawGraph(cost)
+        self.drawGraph(costcu)
+        
+    def drawGraph(self,data):
+        x = [item[0] for item in data]
+        y = [item[1] for item in data]
+        
+        plt.plot(x,y,marker='o')
+        plt.show()
+        
+        
+        
     
     def iterationPrint(self, iterationNr, destroyOpNr, repairOpNr, sizeNBH):
         i = str(iterationNr)
@@ -123,7 +142,8 @@ class ALNS:
         """
         Method that checks if we accept the newly found solution
         """
-        c = Parameters.coolingRate
+        
+    
         state = "Rejected"
         #if we found a global best solution, we always accept
         if self.tempSolution.distance<self.bestDistance:
@@ -136,8 +156,8 @@ class ALNS:
         #currently, we only accept better solutions, no simulated annealing
         if self.tempSolution.distance<self.currentSolution.distance:
             self.currentSolution = self.tempSolution.copy()
-            state = "Accepted"
-        elif random.random() > math.e ** -((self.tempSolution.distance - self.currentSolution.distance)/ self.temperature):
+            state = "Better Sol"
+        elif random.random() < math.e ** -((self.tempSolution.distance - self.currentSolution.distance)/ self.temperature):
             self.currentSolution = self.tempSolution.copy()
             state = "Accepted"
             print("Accepeted the worse soulution")
