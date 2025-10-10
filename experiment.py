@@ -7,7 +7,7 @@ import time
 import pandas as pd
 
 
-k = [1,2,3,4] # 1 is for greedy,500 stands for infinte
+P = [1,3,5,10] 
 
 instance_dir = "Instances"
 
@@ -21,13 +21,13 @@ instance_files = os.listdir(instance_dir)
 FinalResulats = []
 for instance_file in instance_files: # this is AI genrated
 # Construct the full path to the instance file
-    for i in k:
+    for i in P:
         results = []
         
         for randomSeed in range(3):
             testI = os.path.join(instance_dir, instance_file)
             Parameters.randomSeed = randomSeed
-            Parameters.Regretk = i
+            Parameters.p = i
             testI = os.path.join(instance_dir, instance_file)
             problem = Problem.PDPTW.readInstance(testI)
             print(problem)
@@ -39,23 +39,23 @@ for instance_file in instance_files: # this is AI genrated
             #print(alns.bestSolution.distance)
                 
                 
-            endtime = time.time() # get the end time
-            cpuTime = round(endtime-starttime)
-            results.append({'distance': alns.bestSolution.distance, 'time': cpuTime})
+
+      
+            results.append({'distance': alns.bestSolution.distance})
         
         #print(results)
         avg_distance = np.mean([res['distance'] for res in results])            
-        avg_time = np.mean([res['time'] for res in results])
+        #avg_time = np.mean([res['time'] for res in results])
     
         FinalResulats.append({
     'instance' : os.path.basename(alns.problem.name),
     'k': i,
     'average best distance': alns.bestSolution.distance,
-    'average time': avg_time
+    #'average time': avg_time
     })
     
 #print(FinalResulats)
     
 df = pd.DataFrame(FinalResulats)
-df.to_csv("RegretInsertion.csv")
+df.to_csv("WorstRemoval.csv")
 #print(df)

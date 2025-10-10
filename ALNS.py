@@ -218,9 +218,9 @@ class ALNS:
         """
         #perform the destroy 
         if destroyHeuristicNr == 1:
-            self.tempSolution.executeRandomRemoval(sizeNBH,self.randomGen)
+            self.tempSolution.executeWorstReomval(sizeNBH,self.randomGen)
         elif destroyHeuristicNr == 2:
-            self.tempSolution.executeShawRemoval(sizeNBH, self.randomGen)
+            self.tempSolution.executeWorstReomval(sizeNBH, self.randomGen)
         elif destroyHeuristicNr == 3:
             self.tempSolution.executeWorstReomval(sizeNBH, self.randomGen)
 
