@@ -10,26 +10,8 @@ import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
-
-class Parameters: 
-    """
-    Class that holds all the parameters for ALNS
-    """
-    nIterations = 10  #number of iterations of the ALNS
-    minSizeNBH = 1      #minimum neighborhood size
-    maxSizeNBH = 45     #maximum neighborhood size
-    randomSeed = 1      #value of the random seed
-    reward = {
-        "Global Best": 10,
-        "Better Sol": 8,
-        "Accepted": 5,
-        "Rejected": 1
-    }
-    updateSpeed = 0.9
+from Parameters import Parameters
     
-    #can add parameters such as cooling rate etc.
-    startTempControl = 0.3 # this means if will accept the solotions with 10% highes cost with 50% Prob
-    coolingRate = 0.2
 class ALNS:
     """
     Class that models the ALNS algorithm. 
@@ -52,7 +34,7 @@ class ALNS:
         Distance of the best solution
 
     """
-    def __init__(self,problem,nDestroyOps,nRepairOps):
+    def __init__(self,problem,nDestroyOps,nRepairOps,):
         self.problem = problem
         self.nDestroyOps = nDestroyOps
         self.nRepairOps = nRepairOps
@@ -88,6 +70,7 @@ class ALNS:
         costcu = []
         starttime = time.time() # get the start time
         self.constructInitialSolution()
+        
         for i in range(Parameters.nIterations):
             #copy the current solution
             self.tempSolution = self.currentSolution.copy()
@@ -113,8 +96,8 @@ class ALNS:
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
         
-        self.drawGraph(cost)
-        self.drawGraph(costcu)
+       # self.drawGraph(cost)
+       # self.drawGraph(costcu)
         
     def drawGraph(self,data):
         x = [item[0] for item in data]
@@ -243,9 +226,9 @@ class ALNS:
 
         #perform the repair
         if repairHeuristicNr == 1:
-            self.tempSolution.executeRandomInsertion(self.randomGen)
+            self.tempSolution.executeRegretInsertion(self.randomGen)
         elif repairHeuristicNr == 2:
-            self.tempSolution.executeGreedyInsertion(self.randomGen)
+            self.tempSolution.executeRegretInsertion(self.randomGen)
         elif repairHeuristicNr == 3:
             self.tempSolution.executeRegretInsertion(self.randomGen)
 
