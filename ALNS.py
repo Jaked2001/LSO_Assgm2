@@ -131,7 +131,7 @@ class ALNS:
         figureName = fileName + ".png"
         plt.plot(x,y,marker='o')
         plt.show()
-        plt.savefig(fileName)
+        plt.savefig(figureName)
         
         
         
