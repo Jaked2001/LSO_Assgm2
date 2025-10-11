@@ -20,6 +20,6 @@ class Parameters:
     startTempControl = 0.3 # this means if will accept the solotions with 10% highes cost with 50% Prob
     coolingRate = 0.2
     
-    p = 1
+    p = 5
     #
     Regretk = 2

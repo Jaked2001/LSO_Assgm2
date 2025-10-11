@@ -26,9 +26,10 @@ for instance_file in instance_files: # this is AI genrated
         
         for randomSeed in range(3):
             testI = os.path.join(instance_dir, instance_file)
+          
             Parameters.randomSeed = randomSeed
             Parameters.p = i
-            testI = os.path.join(instance_dir, instance_file)
+         
             problem = Problem.PDPTW.readInstance(testI)
             print(problem)
             nDestroyOps = 3
@@ -42,6 +43,8 @@ for instance_file in instance_files: # this is AI genrated
 
       
             results.append({'distance': alns.bestSolution.distance})
+            
+            break
         
         #print(results)
         avg_distance = np.mean([res['distance'] for res in results])            
