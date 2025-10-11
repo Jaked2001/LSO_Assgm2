@@ -23,3 +23,7 @@ class Parameters:
     p = 5
     #
     Regretk = 2
+    
+    alpha = 0.25
+    
+    
