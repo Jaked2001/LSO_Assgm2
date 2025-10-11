@@ -347,7 +347,7 @@ class Solution:
             Used to generate random numbers
             
         """
-        k = 2 # we can change this, 
+        k = Parameters.Regretk # we can change this, 
         while len(self.notServed) > 0:
             bestRequest = None
             bestRoute = None
