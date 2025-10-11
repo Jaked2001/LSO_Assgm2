@@ -7,13 +7,13 @@ import time
 import pandas as pd
 
 
-a = 10
+a = 0
 b = 45
 s = 5
 
 values = np.arange(a, b, s).tolist()
 
-tempControl = [0.05 ,0.1, 0.2, 0.3, 0.5, 0.8]
+#tempControl = [0.05 ,0.1, 0.2, 0.3, 0.5, 0.8]
 #colling_rate = [0.1,0.3,0.5,0.6,0.7,0.8,0.9]
 instance_dir = "Instances"
 
@@ -59,7 +59,7 @@ for instance_file in instance_files: # this is AI genrated
     
         FinalResulats.append({
     'instance' : os.path.basename(alns.problem.name),
-    'minNBHsize': i,
+    'minNBH': i,
     'average best distance': alns.bestSolution.distance,
     #'average time': avg_time
     })

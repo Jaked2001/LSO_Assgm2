@@ -1,13 +1,14 @@
 import numpy as np
 
+
 a = 0
-b = 1
-s = 0.1
+b = 45
+s = 5
 
-lst = np.arange(a, b, s).tolist()
-print(lst)
+values = np.arange(a, b, s).tolist()
 
-for i in range(1,2):
-    print(i)
+myList = []
+for i in values:
+    myList.append(i) 
 
-print(range(1,10))
+print(myList)
