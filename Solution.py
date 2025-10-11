@@ -200,7 +200,7 @@ class Solution:
     def executeRouteRemoval(self, random):
         """
         Method that removes a number of routes from the solution: it removes all requests part of that route
-        It will remove a random number between 0 and 75% of the number of routes currenlty in the solutions. This is to avoid it destroying the whole solution
+        It will remove a random number between 1 and 75% of the number of routes currenlty in the solutions. This is to avoid it destroying the whole solution
 
         It's destroy method number 4 in the ALNS 
 
@@ -213,7 +213,8 @@ class Solution:
         """
 
         removeRange = int(0.75*len(self.routes))
-        n = random.choice(range(removeRange))
+        removeRange = max(2,removeRange)
+        n = random.choice(range(1,removeRange))
 
         chosenRoutes = random.sample(self.routes, n)
         for route in chosenRoutes:
