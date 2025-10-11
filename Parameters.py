@@ -25,4 +25,4 @@ class Parameters:
     Regretk = 2
 
     # For shaw removal
-    alpha = 0.5
+    alpha = 0.25 #Calibrated
