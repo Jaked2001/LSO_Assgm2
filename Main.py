@@ -16,6 +16,6 @@ print(problem)
 nDestroyOps = 3
 nRepairOps = 3
 alns = ALNS(problem,nDestroyOps,nRepairOps)
-Parameters.Regretk = 1
+
 alns.execute()
 
