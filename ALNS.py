@@ -10,27 +10,9 @@ import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
-from pathlib import Path 
+from Parameters import Parameters
 
-class Parameters: 
-    """
-    Class that holds all the parameters for ALNS
-    """
-    nIterations = 100  #number of iterations of the ALNS
-    minSizeNBH = 1      #minimum neighborhood size
-    maxSizeNBH = 45     #maximum neighborhood size
-    randomSeed = 1      #value of the random seed
-    reward = {
-        "Global Best": 10,
-        "Better Sol": 8,
-        "Accepted": 5,
-        "Rejected": 1
-    }
-    updateSpeed = 0.9
-    
-    #can add parameters such as cooling rate etc.
-    startTempControl = 0.1 # this means if will accept the solotions with 10% highes cost with 50% Prob
-    coolingRate = 0.2
+
 class ALNS:
     """
     Class that models the ALNS algorithm. 
@@ -89,9 +71,7 @@ class ALNS:
         costcu = []
         starttime = time.time() # get the start time
         self.constructInitialSolution()
-        
         for i in range(Parameters.nIterations):
-            
             #copy the current solution
             self.tempSolution = self.currentSolution.copy()
             #decide on the size of the neighbourhood
@@ -100,7 +80,6 @@ class ALNS:
             destroyOpNr = self.determineDestroyOpNr()
             repairOpNr = self.determineRepairOpNr()
             #execute the destroy and the repair and evaluate the result
-            #self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.tempSolution.computeDistance()
             self.iterationPrint(i, destroyOpNr, repairOpNr, sizeNBH)
@@ -109,40 +88,32 @@ class ALNS:
             #determine if the new solution is accepted
             state = self.checkIfAcceptNewSol()
             #update the ALNS weights
-            
-            self.updateWeights(state, destroyOpNr, repairOpNr)
-            
-            
             cost.append((i,self.tempSolution.distance))
             costcu.append((i,self.bestSolution.distance))
+            self.updateWeights(state, destroyOpNr, repairOpNr)
         endtime = time.time() # get the end time
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
         
-
-        self.SaveCSVGraph(cost,os.path.basename(self.problem.name) + " tempSolution")
-        self.SaveCSVGraph(costcu, os.path.basename(self.problem.name) + " bestcost")
+        # self.drawGraph(cost)
+        # self.drawGraph(costcu)
         
-    def SaveCSVGraph(self,data,name):
-        
-        output_dir = Path("Itteration resualts") 
-        output_dir.mkdir(exist_ok=True)
-        #print(name)
-        
+    def drawGraph(self,data):
         x = [item[0] for item in data]
         y = [item[1] for item in data]
-    
-        df = pd.DataFrame(data)
-        df.columns = ['Itterations', 'Cost']
-        df = df.set_index('Itterations')
-        df.to_csv(output_dir / f"{name}.csv")
-        plt.plot(x,y,marker='o')
-        plt.savefig(output_dir / f"{name}.png")
-       
+        
 
-        plt.close()
-        
-        
+        results = pd.DataFrame({
+            'Iter': x,
+            'Cost': y
+            })
+        fileName = "log/" +  str(self.problem.name)
+        print(fileName)
+        results.to_csv(fileName, index = False)
+        figureName = fileName + ".png"
+        plt.plot(x,y,marker='o')
+        plt.show()
+        plt.savefig(figureName)
         
         
         
@@ -251,7 +222,8 @@ class ALNS:
             self.tempSolution.executeShawRemoval(sizeNBH, self.randomGen)
         elif destroyHeuristicNr == 3:
             self.tempSolution.executeWorstReomval(sizeNBH, self.randomGen)
-
+        elif destroyHeuristicNr == 4:
+            self.tempSolution.executeRouteRemoval(self.randomGen)
         #perform the repair
         if repairHeuristicNr == 1:
             self.tempSolution.executeRandomInsertion(self.randomGen)
@@ -260,4 +232,5 @@ class ALNS:
         elif repairHeuristicNr == 3:
             self.tempSolution.executeRegretInsertion(self.randomGen)
 
-
+  
+        

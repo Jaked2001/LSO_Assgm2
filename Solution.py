@@ -8,6 +8,7 @@ import numpy as np
 import sys
 from Route import Route
 from Problem import Location, PDPTW
+from Parameters import Parameters
 
 class Solution:
     """
@@ -128,14 +129,13 @@ class Solution:
             
             # Demand component (normalized)
             req_demand = req.pickUpLoc.demand
-            request_demand = req.pickUpLoc.demand
+            request_demand = request.pickUpLoc.demand
             
             R_demand = abs(req_demand - request_demand) / self.problem.capacity # Assumes no loc has demand greater than vehicle capacity. Should not matter, since we are using difference between demands anyway, so this should alsways be between 0 and 1.
-
-
+            alpha = Parameters.alpha
+            beta = 1-alpha
             # Calculate R (relatedness)
-            R =  R_dist + R_demand # relatedness parameter
-            
+            R =  alpha*R_dist + beta*R_demand # relatedness parameter
             relatedness.append((req, request, R))
             # print("Printing relatedness")
             # print(relatedness[request])
@@ -165,8 +165,6 @@ class Solution:
         
         while nReomve > 0:
             cost = []
-            if len(self.served) == 0: # this was werid
-                break
             for req in self.served: # to find which route is now serving this requset
                 routefound = None
                 for route in self.routes:
@@ -187,7 +185,7 @@ class Solution:
                 
                 
             # randomization controlled by the parameter p
-            p = 1 
+            p = Parameters.p
             
             cost.sort(key=lambda x: x[1] , reverse=True)   # sort by form worst based on the delta cost
             # The random removal
@@ -196,10 +194,33 @@ class Solution:
             
             self.removeRequest(cost[reqNumber][0])
             nReomve -= 1
-                        
-        
-    
-    
+
+    def executeRouteRemoval(self, random):
+        """
+        Method that removes a number of routes from the solution: it removes all requests part of that route
+        It will remove a random number between 1 and 75% of the number of routes currenlty in the solutions. This is to avoid it destroying the whole solution
+
+        It's destroy method number 4 in the ALNS 
+
+        Parameters
+        ----------
+        nRemove : int
+            number of requests that are removed.
+        randomGen : random
+            Used to generate random numbers
+        """
+
+        removeRange = int(0.75*len(self.routes))
+        removeRange = max(2,removeRange)
+        n = random.choice(range(1,removeRange))
+
+        chosenRoutes = random.sample(self.routes, n)
+        for route in chosenRoutes:
+            for request in route.requests:
+                self.removeRequest(request)
+
+
+
     def removeRequest(self,request):
         """
         Method that removes a request from the solution
@@ -323,12 +344,8 @@ class Solution:
                 locList = [self.problem.depot,req.pickUpLoc,req.deliveryLoc,self.problem.depot]
                 newRoute = Route(locList,[req],self.problem)
                 self.routes.append(newRoute)
-                self.served.append(req)
-                self.notServed.remove(req)
-                
             #update the lists with served and notServed requests
-            # I think we should also apend to served and remove from not serves here
-            # it reaches, 
+            # I think we should also apend to served and remove from not serves here, but probably  will not reach here anyway.
             
             
     def executeRegretInsertion(self, randomG):
@@ -348,7 +365,7 @@ class Solution:
             Used to generate random numbers
             
         """
-        k = 2 # we can change this, 
+        k = Parameters.Regretk # we can change this, 
         while len(self.notServed) > 0:
             bestRequest = None
             bestRoute = None
@@ -403,5 +420,6 @@ class Solution:
         #print(cost)
         #print(costs[0])
    
-   
+
             
+
