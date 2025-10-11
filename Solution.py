@@ -188,7 +188,7 @@ class Solution:
                 
                 
             # randomization controlled by the parameter p
-            p = 1 
+            p = Parameters.p
             
             cost.sort(key=lambda x: x[1] , reverse=True)   # sort by form worst based on the delta cost
             # The random removal

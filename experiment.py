@@ -49,7 +49,7 @@ for instance_file in instance_files: # this is AI genrated
     
         FinalResulats.append({
     'instance' : os.path.basename(alns.problem.name),
-    'k': i,
+    'p': i,
     'average best distance': alns.bestSolution.distance,
     #'average time': avg_time
     })
