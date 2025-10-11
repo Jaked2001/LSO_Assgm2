@@ -95,13 +95,15 @@ class ALNS:
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
         
-        # self.drawGraph(cost)
-        # self.drawGraph(costcu)
+        self.drawGraph(cost,costcu)
+       # self.drawGraph(costcu)
         
-    def drawGraph(self,data):
+    def drawGraph(self,data,data2):
         x = [item[0] for item in data]
         y = [item[1] for item in data]
         
+        x2 = [item[0] for item in data2]
+        y2 = [item[1] for item in data2]
 
         results = pd.DataFrame({
             'Iter': x,
@@ -112,8 +114,10 @@ class ALNS:
         results.to_csv(fileName, index = False)
         figureName = fileName + ".png"
         plt.plot(x,y,marker='o')
-        plt.show()
+        plt.plot(x2, y2, marker='s', linestyle='--') 
+        #plt.show()
         plt.savefig(figureName)
+        plt.close()
         
         
         
