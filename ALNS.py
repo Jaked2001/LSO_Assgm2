@@ -95,8 +95,8 @@ class ALNS:
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
         
-        self.drawGraph(cost)
-        self.drawGraph(costcu)
+        # self.drawGraph(cost)
+        # self.drawGraph(costcu)
         
     def drawGraph(self,data):
         x = [item[0] for item in data]
