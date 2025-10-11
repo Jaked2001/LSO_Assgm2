@@ -23,3 +23,6 @@ class Parameters:
     p = 5
     #
     Regretk = 2
+
+    # For shaw removal
+    alpha = 0.5
