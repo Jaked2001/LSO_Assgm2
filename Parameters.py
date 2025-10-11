@@ -16,7 +16,7 @@ class Parameters:
         "Accepted": 5,
         "Rejected": 1
     }
-    updateSpeed = 0.8 # Calibrated # For adaptive
+    updateSpeed = 0.8 # For adaptive CALIBRATED
     
     #can add parameters such as cooling rate etc.
     startTempControl = 0.1 # Calibrated  # this means if will accept the solotions with 10% highes cost with 50% Prob

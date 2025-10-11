@@ -213,7 +213,7 @@ class Solution:
         """
 
         removeRange = int(0.75*len(self.routes))
-        removeRange = max(2,removeRange)
+        removeRange = max(2, removeRange)
         n = random.choice(range(1,removeRange))
 
         chosenRoutes = random.sample(self.routes, n)
