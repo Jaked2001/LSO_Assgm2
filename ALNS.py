@@ -80,7 +80,6 @@ class ALNS:
             destroyOpNr = self.determineDestroyOpNr()
             repairOpNr = self.determineRepairOpNr()
             #execute the destroy and the repair and evaluate the result
-            #self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.tempSolution.computeDistance()
             self.iterationPrint(i, destroyOpNr, repairOpNr, sizeNBH)

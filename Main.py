@@ -8,7 +8,9 @@ Created on Mon Aug  1 14:34:48 2022
 import Problem, Solution, Route
 from ALNS import ALNS
 
-testI = "instances/lr112.txt"
+#lr112
+
+testI = "instances/lrc104.txt"
 problem = Problem.PDPTW.readInstance(testI)
 print(problem)
 nDestroyOps = 3
