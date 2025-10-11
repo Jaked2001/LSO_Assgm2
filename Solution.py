@@ -129,14 +129,13 @@ class Solution:
             
             # Demand component (normalized)
             req_demand = req.pickUpLoc.demand
-            request_demand = req.pickUpLoc.demand
+            request_demand = request.pickUpLoc.demand
             
             R_demand = abs(req_demand - request_demand) / self.problem.capacity # Assumes no loc has demand greater than vehicle capacity. Should not matter, since we are using difference between demands anyway, so this should alsways be between 0 and 1.
-
-            alpha, beta = 1,1
+            alpha = 0.9
+            beta = 1-alpha
             # Calculate R (relatedness)
             R =  alpha*R_dist + beta*R_demand # relatedness parameter
-            
             relatedness.append((req, request, R))
             # print("Printing relatedness")
             # print(relatedness[request])
