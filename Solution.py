@@ -196,10 +196,32 @@ class Solution:
             
             self.removeRequest(cost[reqNumber][0])
             nReomve -= 1
-                        
-        
-    
-    
+
+    def executeRouteRemoval(self, random):
+        """
+        Method that removes a number of routes from the solution: it removes all requests part of that route
+        It will remove a random number between 0 and 75% of the number of routes currenlty in the solutions. This is to avoid it destroying the whole solution
+
+        It's destroy method number 4 in the ALNS 
+
+        Parameters
+        ----------
+        nRemove : int
+            number of requests that are removed.
+        randomGen : random
+            Used to generate random numbers
+        """
+
+        removeRange = int(0.75*len(self.routes))
+        n = random.choice(range(removeRange))
+
+        chosenRoutes = random.sample(self.routes, n)
+        for route in chosenRoutes:
+            for request in route.requests:
+                self.removeRequest(request)
+
+
+
     def removeRequest(self,request):
         """
         Method that removes a request from the solution
@@ -400,7 +422,6 @@ class Solution:
             #break
         #print(cost)
         #print(costs[0])
-   
    
 
             

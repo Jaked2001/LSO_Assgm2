@@ -222,7 +222,8 @@ class ALNS:
             self.tempSolution.executeShawRemoval(sizeNBH, self.randomGen)
         elif destroyHeuristicNr == 3:
             self.tempSolution.executeWorstReomval(sizeNBH, self.randomGen)
-
+        elif destroyHeuristicNr == 4:
+            self.tempSolution.executeRouteRemoval(self.randomGen)
         #perform the repair
         if repairHeuristicNr == 1:
             self.tempSolution.executeRandomInsertion(self.randomGen)
