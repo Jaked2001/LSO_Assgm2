@@ -296,6 +296,7 @@ class Solution:
             #update the lists with served and notServed requests
             self.served.append(req)
             self.notServed.remove(req)
+        print(f"There are now {len(self.routes)}")   
          
     def executeGreedyInsertion(self, randomGen):
         """
@@ -311,6 +312,7 @@ class Solution:
         """
         
         while len(self.notServed) > 0:
+            reqBank = []
             bestRequest = None
             bestRoute = None
             bestDist = sys.maxsize
@@ -320,8 +322,12 @@ class Solution:
                 candidateRoute = None
                 candidateDist = sys.maxsize
                 for req in self.notServed:
+
                     newRoute, dist = route.greedyInsert(req)
+
                     if newRoute == None:
+                        reqBank.append(req)
+                        
                         continue
                     elif dist<candidateDist:
                         candidateRequest = req
@@ -340,9 +346,11 @@ class Solution:
                 self.routes.append(bestRoute)
                 self.served.append(bestRequest)
                 self.notServed.remove(bestRequest)
-
-            elif not inserted:
+            if bestRequest == None:
                 #Impossible to insert in existing routes, create new route:
+                #print(reqBank)
+                req = randomGen.choice(self.notServed)
+                
                 locList = [self.problem.depot,req.pickUpLoc,req.deliveryLoc,self.problem.depot]
                 newRoute = Route(locList,[req],self.problem)
                 self.routes.append(newRoute)
@@ -350,7 +358,7 @@ class Solution:
                 self.notServed.remove(req)
             #update the lists with served and notServed requests
             # I think we should also apend to served and remove from not serves here
-            
+        print(f"There are now {len(self.routes)}")   
             
     def executeRegretInsertion(self, randomG):
         """
