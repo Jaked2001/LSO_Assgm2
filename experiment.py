@@ -7,9 +7,13 @@ import time
 import pandas as pd
 
 
-#alphas = [0, 0.1, 0.25, 0.5, 0.75, 1]
+a = 0
+b = 45
+s = 5
 
-tempControl = [0.05 ,0.1, 0.2, 0.3, 0.5, 0.8]
+values = np.arange(a, b, s).tolist()
+
+#tempControl = [0.05 ,0.1, 0.2, 0.3, 0.5, 0.8]
 #colling_rate = [0.1,0.3,0.5,0.6,0.7,0.8,0.9]
 instance_dir = "Instances"
 
@@ -23,17 +27,18 @@ instance_files = os.listdir(instance_dir)
 FinalResulats = []
 for instance_file in instance_files: # this is AI genrated
 # Construct the full path to the instance file
-    for temp in tempControl:
+    for i in values:
         results = []
         
         for randomSeed in range(3):
             testI = os.path.join(instance_dir, instance_file)
           
             Parameters.randomSeed = randomSeed
-            Parameters.startTempControl = temp
+            Parameters.minSizeNBH = i
          
             problem = Problem.PDPTW.readInstance(testI)
             print(problem)
+            nDestroyOps = 4
             nDestroyOps = 4
             nRepairOps = 3
             alns = ALNS(problem,nDestroyOps,nRepairOps)
@@ -54,7 +59,7 @@ for instance_file in instance_files: # this is AI genrated
     
         FinalResulats.append({
     'instance' : os.path.basename(alns.problem.name),
-    'temp': temp,
+    'minNBH': i,
     'average best distance': alns.bestSolution.distance,
     #'average time': avg_time
     })
@@ -62,5 +67,5 @@ for instance_file in instance_files: # this is AI genrated
 #print(FinalResulats)
 
 df = pd.DataFrame(FinalResulats)
-df.to_csv("tempControl.csv")
+df.to_csv("minNBHsize.csv")
 #print(df)
