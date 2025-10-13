@@ -107,13 +107,16 @@ class ALNS:
 
         results = pd.DataFrame({
             'Iter': x,
-            'Cost': y
+            'Iter Cost' : y,
+            'Cost Best': y2
             })
         fileName = "log/" +  str(self.problem.name)
-        print(fileName)
+        #print(fileName)
+        fileName = fileName + "csv"
         results.to_csv(fileName, index = False)
         figureName = fileName + ".png"
         plt.plot(x,y,marker='o')
+        
         plt.plot(x2, y2, marker='s', linestyle='--') 
         #plt.show()
         plt.savefig(figureName)
