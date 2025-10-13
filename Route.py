@@ -6,6 +6,7 @@ Created on Thu Jul 28 17:10:03 2022
 """
 import sys
 
+
 class Route:
     """
     Class used to represent a route
@@ -154,3 +155,31 @@ class Route:
                         minDist = afterInsertion.distance
         
         return bestInsert, minDist
+    
+    
+    def twoOpt(self):
+        """
+        applies the 2-opt heuristic to the route.
+        """
+        improved = True
+        current_route = self
+        while improved:
+            improved = False
+            best_distance = current_route.distance
+            for i in range(1, len(current_route.locations) - 2):
+                for j in range(i + 1, len(current_route.locations) - 1):
+                    
+                    new_locations = current_route.locations[:i] + current_route.locations[i:j+1][::-1] + current_route.locations[j+1:]
+                    new_route = Route(new_locations, current_route.requests, current_route.problem)
+
+                    # If the new route is feasible and better
+                    if new_route.isFeasible() and new_route.distance < best_distance: # This may resaults to some routes which are not two opt because the two opt version of them are not feasible
+                        current_route = new_route
+                        best_distance = new_route.distance
+                        improved = True
+                        
+                        
+                        break  
+                if improved:
+                    break  
+        return current_route

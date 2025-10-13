@@ -104,7 +104,8 @@ class PDPTW:
         self.requests = requests
         self.depot = depot
         self.capacity = vehicleCapacity
-        ##construct the set with all locations
+        ##construct the set with all 
+        # ations
         self.locations = set()
         self.locations.add(depot)
         for r in self.requests: 

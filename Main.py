@@ -10,10 +10,11 @@ from ALNS import ALNS
 
 #lr112
 
-testI = "instances/lrc104.txt"
+testI = "instances/lc102.txt"
 problem = Problem.PDPTW.readInstance(testI)
 print(problem)
 nDestroyOps = 4
 nRepairOps = 3
 alns = ALNS(problem,nDestroyOps,nRepairOps)
 alns.execute()
+

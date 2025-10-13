@@ -12,6 +12,11 @@ import pandas as pd
 import os
 from Parameters import Parameters
 
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
+
+
 
 class ALNS:
     """
@@ -94,6 +99,7 @@ class ALNS:
         endtime = time.time() # get the end time
         cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
+        self.plot_routes()
         
         # self.drawGraph(cost)
         # self.drawGraph(costcu)
@@ -136,21 +142,30 @@ class ALNS:
         """
         Method that checks if we accept the newly found solution
         """
+
         
-    
+  
         state = "Rejected"
         #if we found a global best solution, we always accept
+        if Parameters.maketwoOpt:
+            self.currentSolution.ApplyTwoOpt()
         if self.tempSolution.distance<self.bestDistance:
+
             self.bestDistance = self.tempSolution.distance
             self.bestSolution = self.tempSolution.copy()
             self.currentSolution = self.tempSolution.copy()
             state = "Global Best"
+            #self.tempSolution.ApplyTwoOpt()
             print("Found new global best solution.\n")
+            
         
-        #currently, we only accept better solutions, no simulated annealing
+        #currently, we  accept better solution 
         if self.tempSolution.distance<self.currentSolution.distance:
+
             self.currentSolution = self.tempSolution.copy()
             state = "Better Sol"
+
+        # simulated annealing
         elif random.random() < math.e ** -((self.tempSolution.distance - self.currentSolution.distance)/ self.temperature):
             self.currentSolution = self.tempSolution.copy()
             state = "Accepted"
@@ -231,6 +246,32 @@ class ALNS:
             self.tempSolution.executeGreedyInsertion(self.randomGen)
         elif repairHeuristicNr == 3:
             self.tempSolution.executeRegretInsertion(self.randomGen)
+            
+    def plot_routes(self):
+            """
+            Plots the routes
+            """
+            plt.figure(figsize=(12, 12))
+           
+            num_routes = len(self.bestSolution.routes) # using rainbow is the suggestion by AI, before that the colors was repated sometimes
+            colors = cm.rainbow(np.linspace(0, 1, num_routes))
 
-  
-        
+            for route,color in zip(self.bestSolution.routes, colors):
+                x_coords = [loc.xLoc for loc in route.locations]
+                y_coords = [loc.yLoc for loc in route.locations]
+                plt.plot(x_coords, y_coords, marker='o',color = color)
+
+            
+            plt.plot(self.problem.depot.xLoc, self.problem.depot.yLoc, 'p', markersize=15)
+
+
+            
+            
+            plot_filename = f"log/{os.path.basename(self.problem.name)}_routes.png"
+            plt.savefig(plot_filename)
+            print(f"Route plot saved to {plot_filename}")
+            
+            #plt.show()
+
+    
+            

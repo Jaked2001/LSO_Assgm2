@@ -10,6 +10,9 @@ from Route import Route
 from Problem import Location, PDPTW
 from Parameters import Parameters
 
+
+
+
 class Solution:
     """
     Method that represents a solution tot the PDPTW
@@ -408,7 +411,7 @@ class Solution:
                        
                         
             if bestRequest is None:
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                 req = randomG.choice(self.notServed)
                 locList = [self.problem.depot, req.pickUpLoc, req.deliveryLoc, self.problem.depot]
                 newRoute = Route(locList, [req], self.problem)
@@ -424,6 +427,22 @@ class Solution:
         #print(cost)
         #print(costs[0])
    
+   
+    def ApplyTwoOpt(self):
+        
+        routes = []
+        
+        for route in self.routes:
+            twoOpt = route.twoOpt()
+            if twoOpt.distance < route.distance:
+                print("Two Opt Made")
+            
+            routes.append(twoOpt)
+                
+        self.routes = routes
+        self.computeDistance()
+
+       
 
             
 

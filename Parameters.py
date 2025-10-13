@@ -4,9 +4,11 @@ class Parameters:
     Class that holds all the parameters for ALNS
     """
     
-    nIterations = 50  #number of iterations of the ALNS
+    maketwoOpt = True
     
-    minSizeNBH = 1      #minimum neighborhood size
+    nIterations = 80  #number of iterations of the ALNS
+    
+    minSizeNBH = 10      #minimum neighborhood size
     maxSizeNBH = 45     #maximum neighborhood size
     
     randomSeed = 1      #value of the random seed
