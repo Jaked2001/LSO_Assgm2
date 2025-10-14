@@ -314,6 +314,7 @@ class Solution:
         """
         
         while len(self.notServed) > 0:
+            reqBank = []
             bestRequest = None
             bestRoute = None
             bestDist = sys.maxsize
@@ -323,8 +324,12 @@ class Solution:
                 candidateRoute = None
                 candidateDist = sys.maxsize
                 for req in self.notServed:
+
                     newRoute, dist = route.greedyInsert(req)
+
                     if newRoute == None:
+                        reqBank.append(req)
+                        
                         continue
                     elif dist<candidateDist:
                         candidateRequest = req
@@ -343,9 +348,11 @@ class Solution:
                 self.routes.append(bestRoute)
                 self.served.append(bestRequest)
                 self.notServed.remove(bestRequest)
-
-            elif not inserted:
+            if bestRequest == None:
                 #Impossible to insert in existing routes, create new route:
+                #print(reqBank)
+                req = randomGen.choice(self.notServed)
+                
                 locList = [self.problem.depot,req.pickUpLoc,req.deliveryLoc,self.problem.depot]
                 newRoute = Route(locList,[req],self.problem)
                 self.routes.append(newRoute)
