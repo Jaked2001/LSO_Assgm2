@@ -5,6 +5,7 @@ Created on Thu Jul 28 17:10:03 2022
 @author: Original template by Rolf van Lieshout
 """
 import sys
+from Problem import Location
 
 
 class Route:
@@ -70,13 +71,15 @@ class Route:
         curNode = self.locations[0] #current node
         pickedUp = set() #set with all requests that we picked up, used to check precedence
         
+        #totDistance = 0
+        curCharge = self.problem.battery
         #iterate over route and check feasibility of time windows, capacity and precedence
         for i in range(1,len(self.locations)-1):
             prevNode = self.locations[i-1]
             curNode = self.locations[i]
             dist = self.problem.distMatrix[prevNode.nodeID][curNode.nodeID]
             curTime = max(curNode.startTW, curTime + prevNode.servTime + dist)
-
+            #totDistance += dist
             #check if time window is respected
             if curTime>curNode.endTW:
                 return False
@@ -84,6 +87,10 @@ class Route:
             curLoad += curNode.demand
             if curLoad>self.problem.capacity:
                 return False
+            #check if vehicle has enough charge
+            curCharge = curCharge - dist
+            if curCharge < 0:
+               return False
             #check if we don't do a delivery before a pickup
             if curNode.typeLoc == 1:
                 #it is a pickup

@@ -99,13 +99,13 @@ class PDPTW:
         capacity of the vehicles
     
     """     
-    def __init__(self,name,requests,depot,vehicleCapacity):
+    def __init__(self,name,requests,depot,vehicleCapacity, vehicleBattery):
         self.name = name
         self.requests = requests
         self.depot = depot
         self.capacity = vehicleCapacity
-        ##construct the set with all 
-        # ations
+        self.battery = vehicleBattery
+        ##construct the set with all locations
         self.locations = set()
         self.locations.add(depot)
         for r in self.requests: 
@@ -190,7 +190,13 @@ class PDPTW:
         
         # read the vehicle capacity 
         f = open(fileName)
+        print("helo")
+        print(f)
         capLine = f.readlines()[-4]
         capacity = int(capLine[-7:-3].strip())
-
-        return PDPTW(fileName,requests,depot,capacity)
+        
+        f = open(fileName)
+        batLine = f.readlines()[-5]
+        battery = float(batLine[-7:-1].strip())
+        print(battery)
+        return PDPTW(fileName,requests,depot,capacity, battery)

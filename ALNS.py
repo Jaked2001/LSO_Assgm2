@@ -55,6 +55,8 @@ class ALNS:
         """
         self.currentSolution = Solution(self.problem,list(),list(),list(self.problem.requests.copy()))
         self.currentSolution.executeRandomInsertion(self.randomGen)
+        #self.currentSolution.executeGreedyInsertion(self.randomGen)
+        #self.currentSolution.executeRegretInsertion(self.randomGen)
         self.currentSolution.computeDistance()
         self.bestSolution = self.currentSolution.copy()
         self.bestDistance = self.currentSolution.distance
