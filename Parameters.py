@@ -33,3 +33,8 @@ class Parameters:
 
     # For shaw removal
     alpha = 0.25 # Calibrated
+
+    # To override operators:
+    overrideOpr = False
+    destroy = 2
+    repair = 2

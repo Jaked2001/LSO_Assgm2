@@ -84,8 +84,12 @@ class ALNS:
             #decide on the size of the neighbourhood
             sizeNBH = self.randomGen.randint(Parameters.minSizeNBH,Parameters.maxSizeNBH)
             #decide on the destroy and repair operator numbers
-            destroyOpNr = self.determineDestroyOpNr()
-            repairOpNr = self.determineRepairOpNr()
+            if not Parameters.overrideOpr:
+                destroyOpNr = self.determineDestroyOpNr()
+                repairOpNr = self.determineRepairOpNr()
+            elif Parameters.overrideOpr:
+                destroyOpNr = Parameters.destroy
+                repairOpNr = Parameters.repair
             #execute the destroy and the repair and evaluate the result
             self.destroyAndRepair(destroyOpNr, repairOpNr, sizeNBH);
             self.tempSolution.computeDistance()
