@@ -149,10 +149,10 @@ class ALNS:
   
         state = "Rejected"
         #if we found a global best solution, we always accept
-        if Parameters.maketwoOpt:
-            self.currentSolution.ApplyTwoOpt()
-        if self.tempSolution.distance<self.bestDistance:
 
+        if self.tempSolution.distance<self.bestDistance:
+            if Parameters.maketwoOpt:
+                self.currentSolution.ApplyTwoOpt()
             self.bestDistance = self.tempSolution.distance
             self.bestSolution = self.tempSolution.copy()
             self.currentSolution = self.tempSolution.copy()

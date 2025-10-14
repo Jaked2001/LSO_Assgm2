@@ -21,7 +21,7 @@ for inst in instance_files:
         testI = os.path.join(instance_dir, inst)
         problem = Problem.PDPTW.readInstance(testI)
         print(problem)
-        nDestroyOps = 3
+        nDestroyOps = 4
         nRepairOps = 3
         alns = ALNS(problem,nDestroyOps,nRepairOps)
         alns.execute()

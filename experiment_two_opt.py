@@ -36,8 +36,8 @@ for instance_file in instance_files:
             'best_distance': alns.bestSolution.distance
         })
 
-# --- Save Results to CSV ---
-print("\n--- Experiment Complete! ---")
+
+
 df = pd.DataFrame(final_results)
 df.to_csv(output_csv_file, index=False)
 print(f"Results saved to {output_csv_file}")
