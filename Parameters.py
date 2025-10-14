@@ -9,7 +9,7 @@ class Parameters:
 
     nIterations = 80  #number of iterations of the ALNS
     
-    minSizeNBH = 1      #minimum neighborhood size CALIBRATED
+    minSizeNBH = 10      #minimum neighborhood size CALIBRATED
     maxSizeNBH = 45     #maximum neighborhood size CALIBRATED
     
     randomSeed = 1      #value of the random seed
