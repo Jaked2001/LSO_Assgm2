@@ -103,8 +103,8 @@ class ALNS:
             costcu.append((i,self.bestSolution.distance))
             self.updateWeights(state, destroyOpNr, repairOpNr)
         endtime = time.time() # get the end time
-        cpuTime = round(endtime-starttime)
-        print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(cpuTime)+" seconds")
+        self.cpuTime = round(endtime-starttime)
+        print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(self.cpuTime)+" seconds")
         self.plot_routes()
         
         # self.drawGraph(cost)
