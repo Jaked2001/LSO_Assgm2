@@ -6,7 +6,7 @@ Created on Thu Jul 28 17:10:03 2022
 """
 import sys
 from Problem import Location
-
+from Parameters import Parameters
 
 class Route:
     """
@@ -84,13 +84,15 @@ class Route:
             if curTime>curNode.endTW:
                 return False
             #check if capacity not exceeded
+            
             curLoad += curNode.demand
             if curLoad>self.problem.capacity:
                 return False
             #check if vehicle has enough charge
-            curCharge = curCharge - dist
-            if curCharge < 0:
-               return False
+            if Parameters.useBattery:
+                curCharge = curCharge - dist
+                if curCharge < 0:
+                   return False
             #check if we don't do a delivery before a pickup
             if curNode.typeLoc == 1:
                 #it is a pickup

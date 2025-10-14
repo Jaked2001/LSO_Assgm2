@@ -10,11 +10,13 @@ from ALNS import ALNS
 
 #lr112
 
-testI = "instances/lc102.txt"
+testI = "instances/c202C16.txt"
 problem = Problem.PDPTW.readInstance(testI)
 print(problem)
 nDestroyOps = 4
 nRepairOps = 3
 alns = ALNS(problem,nDestroyOps,nRepairOps)
 alns.execute()
-
+print(len(alns.bestSolution.routes))
+for i in alns.bestSolution.routes:
+    print(i.computeDistance())
