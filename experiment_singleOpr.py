@@ -10,14 +10,16 @@ import sys
 instance_dir = "Instances"
 
 # Get a list of all files in the Instances directory
-instance_files = os.listdir(instance_dir)[0:2]
+instance_files = os.listdir(instance_dir)
 print(instance_files)
 
-destroyList = [1]#,2,3,4]
-repairList = [1]#,2,3]
+destroyList = [1,2,3,4]
+repairList = [1,2,3]
 tot_results = []
 
 bestCombinations = []
+
+tot_timeStart = time.time()
 for file in instance_files:
     inst = os.path.join(instance_dir, file)
     instName = inst.replace("Instances/", "")
@@ -44,7 +46,7 @@ for file in instance_files:
         for repairOpr in repairList:
             starttime = time.time() # get the start time
             Parameters.useBattery = False
-            Parameters.overrideOpr = False
+            Parameters.overrideOpr = True
             Parameters.destroy = destroyOpr
             Parameters.repair = repairOpr
 
@@ -95,3 +97,8 @@ for file in instance_files:
 
 bestCombinations_df = pd.DataFrame(bestCombinations)
 bestCombinations_df.to_csv("log/singleOpr/bestCombinationForEachInstance.csv")
+
+
+tot_timeEnd = time.time()
+tot_CPUtime = round(tot_timeEnd-tot_timeStart)
+print(tot_CPUtime)

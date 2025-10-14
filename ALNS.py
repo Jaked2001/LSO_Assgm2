@@ -105,7 +105,7 @@ class ALNS:
         endtime = time.time() # get the end time
         self.cpuTime = round(endtime-starttime)
         print("Terminated. Final distance: "+str(self.bestSolution.distance)+", cpuTime: "+str(self.cpuTime)+" seconds")
-        self.plot_routes()
+        #self.plot_routes()
         
         # self.drawGraph(cost)
         # self.drawGraph(costcu)
@@ -126,6 +126,7 @@ class ALNS:
         plt.plot(x,y,marker='o')
         plt.show()
         plt.savefig(figureName)
+        plt.close('all')
         
         
         
@@ -276,7 +277,7 @@ class ALNS:
             plot_filename = f"log/{os.path.basename(self.problem.name)}_routes.png"
             plt.savefig(plot_filename)
             print(f"Route plot saved to {plot_filename}")
-            
+            plt.close('all')
             #plt.show()
 
     
