@@ -4,8 +4,9 @@ class Parameters:
     Class that holds all the parameters for ALNS
     """
     
-    maketwoOpt = True
+    maketwoOpt = False
     
+
     nIterations = 80  #number of iterations of the ALNS
     
     minSizeNBH = 1      #minimum neighborhood size CALIBRATED
@@ -24,7 +25,7 @@ class Parameters:
     startTempControl = 0.1 # Calibrated  # this means if will accept the solotions with 10% highes cost with 50% Prob
     coolingRate = 0.7 #     updateSpeed = 0.8 # For adaptive
 
-    
+    useBattery = True
     # ------------------------- #
 
     p = 5 # Calibrated
